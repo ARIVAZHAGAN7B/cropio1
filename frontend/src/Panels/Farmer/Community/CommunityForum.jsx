@@ -32,7 +32,6 @@ const filterOptions = {
   Language: ["All Languages", "English", "Hindi", "Chinese"],
   Tags: ["All Tags", "Sustainable", "Organic", "AI", "Pest Control"],
 };
-
 export default function CommunityForum() {
   const [filters, setFilters] = useState({
     Crop: "allcrops",
@@ -122,12 +121,6 @@ export default function CommunityForum() {
               <p className="text-[#121b0e] text-[32px] font-bold">
                 Community Feed
               </p>
-              <button
-                onClick={() => alert("Open new post modal")}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
-              >
-                New Post
-              </button>
             </div>
 
             {/* Posts */}

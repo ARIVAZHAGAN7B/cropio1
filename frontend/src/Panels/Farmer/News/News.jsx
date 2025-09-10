@@ -1,41 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const News = () => {
   // State for active tab and filters
   const [activeTab, setActiveTab] = useState("News");
   const [activeFilters, setActiveFilters] = useState({ Crop: false, Source: false });
+  const [tabContent, setTabContent] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const tabs = ["News", "MSP Updates", "Policies", "Schemes"];
   const filters = ["Crop", "Source"];
 
-  // Sample content for each tab
-  const tabContent = {
-    News: [
-      {
-        title: "New Government Initiatives for Farmers",
-        desc:
-          "The government has announced new initiatives to support farmers in the upcoming season, including subsidies for seeds and fertilizers.",
-        img:
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuB311kyWdkkheMDUSApiertldQlZ4mA3_JoUg_ct2X7G5KDfjwnj9ajY16CtYaEEFLjCr8wbK7g6DEs6R5I31YZW4kdrIa0MDxRMhw4Ere0XHUI_zk4m6Qf3OvglYjTeK0Strr6mImKqaZtWdKCdI4H8Me53iqNA201N67eXBWxIlaniXAvJqlZTRgqW-dsbhAgyzd_sfpz7-TO_9eYMThq6bEeIH7YmaD3elnRsOVtWNeVWAeixPoOGjAgG_uYOXnEluksia8dBoY",
-      },
-      {
-        title: "Weather Impacts on Crop Yields",
-        desc:
-          "Recent weather patterns have significantly impacted crop yields in the southern regions, leading to concerns about food security.",
-        img:
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuDdXm6YJivEGRBsl5btnVu2QyxkdcsuBck5m-2r3P6eKf7xPxbITo_6mjrNyT7FCmc87wk8f7lERI8QCSkGWp6ASvN2uyHqSxH9X2RT0aXewoL21_tDhfwdenE7krNbKlNkGzSlSf6xpG_5els0Iu_G2suziDNBf_h7FVKcQb1kvlpNWkPs7v-Q2iWSOft3_uaOP5FSyiNZ3bROpDETkKBDlZyRqsQ1MfTM8iZYeR1s6HA2u1ByqiDyFj8zxvb1YBV0pvT-O0eIQcU",
-      },
-    ],
-    "MSP Updates": [
-      { title: "MSP for Wheat Increased", desc: "The government has raised the MSP for wheat by 5% this year.", img: "https://via.placeholder.com/70" },
-    ],
-    Policies: [
-      { title: "New Organic Farming Policy", desc: "A policy encouraging organic farming has been introduced.", img: "https://via.placeholder.com/70" },
-    ],
-    Schemes: [
-      { title: "Subsidy Scheme for Irrigation", desc: "Farmers can now apply for irrigation subsidies online.", img: "https://via.placeholder.com/70" },
-    ],
-  };
+  useEffect(() => {
+    const fetchTabContent = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/farmer/news/news");
+        const data = await res.json();
+        setTabContent(data);
+      } catch (error) {
+        console.error("Error fetching tab content:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTabContent();
+  }, []);
 
   // Filter toggle
   const toggleFilter = (filter) => {
@@ -65,14 +53,16 @@ const News = () => {
 
         {/* Tabs */}
         <div className="px-10 py-5">
-          <h1 className="text-[32px] font-bold text-[#121b0e] mb-4">Agricultural News & Updates</h1>
+          <h1 className="text-[32px] font-bold text-[#121b0e] mb-4">
+            Agricultural News & Updates
+          </h1>
 
-          <div className="flex gap-4 border-b border-[#d7e7d0] pb-2 mb-4">
+          <div className="flex gap-4 border-b border-[#d7e7d0] pb-2 mb-4 cursor-pointer">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-2 font-bold text-sm tracking-[0.015em] transition-colors ${
+                className={`pb-2 font-bold text-sm tracking-[0.015em] transition-colors cursor-pointer ${
                   activeTab === tab
                     ? "text-[#121b0e] border-b-4 border-[#4ab714]"
                     : "text-[#67974e] border-b-4 border-transparent"
@@ -104,18 +94,27 @@ const News = () => {
           </div>
 
           {/* Content */}
-          {tabContent[activeTab].map((item, index) => (
-            <div key={index} className="flex gap-4 bg-[#f9fcf8] p-4 mb-4 rounded-xl shadow-sm">
+          {loading ? (
+            <p className="text-[#67974e]">Loading...</p>
+          ) : tabContent[activeTab]?.length > 0 ? (
+            tabContent[activeTab].map((item, index) => (
               <div
-                className="bg-center bg-cover rounded-lg size-[70px]"
-                style={{ backgroundImage: `url('${item.img}')` }}
-              ></div>
-              <div className="flex flex-col">
-                <p className="text-base font-medium text-[#121b0e]">{item.title}</p>
-                <p className="text-sm text-[#67974e]">{item.desc}</p>
+                key={index}
+                className="flex gap-4 bg-[#f9fcf8] p-4 mb-4 rounded-xl shadow-sm"
+              >
+                <div
+                  className="bg-center bg-cover rounded-lg size-[70px]"
+                  style={{ backgroundImage: `url('${item.img}')` }}
+                ></div>
+                <div className="flex flex-col">
+                  <p className="text-base font-medium text-[#121b0e]">{item.title}</p>
+                  <p className="text-sm text-[#67974e]">{item.desc}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-[#67974e]">No content available for {activeTab}.</p>
+          )}
 
           {/* Button */}
           <div className="flex justify-end px-4">

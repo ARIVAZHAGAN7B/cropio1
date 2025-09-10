@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Section({ title, icon, description, extraInfo, buttons }) {
+export default function Section({ title, description, extraInfo, buttons }) {
   return (
     <div>
       <h2 className="text-[#121b0e] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
@@ -8,7 +8,7 @@ export default function Section({ title, icon, description, extraInfo, buttons }
       </h2>
       <div className="flex items-center gap-4 bg-[#f9fcf8] px-4 min-h-[72px] py-2">
         <div className="text-[#121b0e] flex items-center justify-center rounded-lg bg-[#ebf3e7] shrink-0 w-12 h-12">
-          {icon}
+          {/* {icon} */}
         </div>
         <div className="flex flex-col justify-center">
           <p className="text-[#121b0e] text-base font-medium leading-normal line-clamp-1">
