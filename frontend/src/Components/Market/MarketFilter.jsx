@@ -32,7 +32,7 @@ const MarketFilter = ({
       </div>
 
       <h2 className="text-[#121b0e] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-        Filters
+        Filters Changed
       </h2>
 
       <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
