@@ -1,6 +1,26 @@
 import React from "react";
+import { useEffect } from "react";
+import { useState } from "react";
+const baseUrl = import.meta.env.VITE_FARMER_API_URL ;
+
 
 export default function YieldEstimator() {
+  const [title, settitle] = useState({
+  title:"",
+  description:""
+})
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const res = await fetch(`${baseUrl}/yieldestimation/estimatedyield`);
+        const data = await res.json();
+        settitle(data);
+      } catch (error) {
+        console.log("Error fetching yield data:", error);
+      }
+    }
+    loadData();
+  }, []);
   return (
     <div
       className="relative flex min-h-screen flex-col bg-[#f9fcf8] group/design-root overflow-x-hidden"
@@ -103,14 +123,10 @@ export default function YieldEstimator() {
                 <div className="flex w-full items-end justify-between gap-4 p-4">
                   <div className="flex max-w-[440px] flex-1 flex-col gap-1">
                     <p className="text-white tracking-light text-2xl font-bold leading-tight max-w-[440px]">
-                      Estimated Yield: 2500 kg/acre
+                      {title.title}
                     </p>
                     <p className="text-white text-base font-medium leading-normal">
-                      Compared to the average yield of 2200 kg/acre in your region,
-                      your predicted yield is higher. Factors influencing your yield
-                      include soil type and irrigation method. Tips for improvement:
-                      Optimize fertilizer use and consider crop rotation. Confidence
-                      Score: 85%
+                      {title.description}
                     </p>
                   </div>
                 </div>

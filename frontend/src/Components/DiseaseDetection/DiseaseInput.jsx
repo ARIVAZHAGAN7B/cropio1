@@ -6,7 +6,7 @@ const DiseaseInput = ({ onDetectionResult }) => {
   const [symptoms, setSymptoms] = useState('');
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
-  const baseUrl = import.meta.env.VITE_FARMER_API_URL ;
+  const baseUrl = import.meta.env.VITE_FARMER_API_URL;
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -23,7 +23,7 @@ const DiseaseInput = ({ onDetectionResult }) => {
     }
 
     setLoading(true);
-    
+
     try {
       // In a real implementation, you'd convert the image to base64 or use FormData
       const formData = new FormData();
@@ -31,15 +31,17 @@ const DiseaseInput = ({ onDetectionResult }) => {
       formData.append('cropType', cropType);
       formData.append('symptoms', symptoms);
 
-      const response = await fetch(`${baseUrl}/dieseased/inputdiesease`, {
+      const response = await fetch(`${baseUrl}/disease/input`, {
         method: 'POST',
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cropType, symptoms })
       });
 
       const result = await response.json();
-      
+
       if (result.success) {
         onDetectionResult(result.data);
+        console.log("We won");
       } else {
         alert('Detection failed: ' + result.message);
       }
@@ -54,7 +56,7 @@ const DiseaseInput = ({ onDetectionResult }) => {
   return (
     <div className="p-6 bg-white rounded-xl shadow-lg">
       <h2 className="text-xl font-bold text-[#131811] mb-4">Disease Detection</h2>
-      
+
       <div className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-[#131811] mb-2">
@@ -103,11 +105,10 @@ const DiseaseInput = ({ onDetectionResult }) => {
         <button
           onClick={handleDetection}
           disabled={loading}
-          className={`w-full py-3 rounded-lg text-white font-medium ${
-            loading 
-              ? 'bg-gray-400 cursor-not-allowed' 
+          className={`w-full py-3 rounded-lg text-white font-medium ${loading
+              ? 'bg-gray-400 cursor-not-allowed'
               : 'bg-green-600 hover:bg-green-700'
-          }`}
+            }`}
         >
           {loading ? 'Analyzing...' : 'Detect Disease'}
         </button>
