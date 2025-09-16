@@ -1,5 +1,9 @@
 import HomeDashboard from "../Components/Home/HomeDashboard";
 import {Link} from "react-router-dom";
+import Corn from "../assets/images/corn.jpg";
+import Wheat from "../assets/images/wheat.jpg";
+import Soya from "../assets/images/soyabean.jpg";
+import Disease from "../assets/images/disease-detection.png";
 
 const FarmerDashboard = () => {
         return (
@@ -25,17 +29,17 @@ const FarmerDashboard = () => {
                 {
                   title: "Wheat Varieties for Your Region",
                   text: "Discover the best wheat varieties suited for your farm's soil and climate.",
-                  img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCtWo2z61gpuwRBzWdkGX9h5eHY41OORh12u2UX8Q8jnptjCCEi_2Jpk2aoAg3rpR3f8e4hRL2KU2iIBSvBPZglE8ecg9hivBOMn3QZzVZXZzDRsHhaS6FdC11w3ECzj8R39YPkY47eDko4fZCN7n4tEKQ94shrPnFmzkxYxfdSKomLBLmNauNp-xERs9govaI7i1zrrnByJqBS6Ps6687cVDPFE_Sfhf-1OYTqXBSyaK_o_2VX86_Qz5197M5RV-adnhO34vvmaes",
+                  img: Wheat,
                 },
                 {
                   title: "Optimized Corn Cultivation",
                   text: "Maximize your corn yield with our expert cultivation techniques.",
-                  img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBOnqCWPnRIpnS6xcwwXxVslXpcZ8-Jd8ODEt2zeWQ6ueufiMGy39CgV7jiVdkT7aa64uuSfqQI2oQmnfnyiwouwlDH3kR0fEplkrHlgS5TxN1msSRqpJG1TfbtZ9Wzny0d_cen9HzsaDYfYvKLF6vwNTaaC8-DpNP6t-vejL6G0NAZUaY4BrbrAJD6V14l_2zqy76tO00vrVeBnxTuz26guczKBtd8RCAFxuWSBhl_v0j1lOtdj2oVKA2DTrlFkqrfaSQ1xLc5iNI",
+                  img: Corn,
                 },
                 {
                   title: "Soybean Planting Strategies",
                   text: "Learn effective strategies for planting and nurturing soybeans.",
-                  img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBKORHA3faWghYrGY5hZkZwZdWyKapp0IE-n1yZUHV23GkgGcBhsVyFH_QFf51mslNTvjwUyAx_T0JCaYW9Zb4QDkQxOF_rlaKUJsQS1xgBsKb9FoRMJ5kPBN5B7WlRwtiTdBn9-vcA2zTB-PPB2Xq-33_q3JnLAb6ZC74yT8CkCRUfqWbT2EFxldL3FYXECJpHKwV-Q8F52E0oAwtASNJlGG9kXivpaacMSiX7ZicAdPF9l2NARecAYQaVTXWpjDxvYVoKOfmTIAA",
+                  img: Soya,
                 },
               ].map((item, index) => (
                 <div key={index} className="bg-white rounded-lg shadow">
@@ -73,7 +77,7 @@ const FarmerDashboard = () => {
                 className="md:w-1/2 h-56 md:h-auto bg-cover bg-center"
                 style={{
                   backgroundImage:
-                    "url('https://lh3.googleusercontent.com/aida-public/AB6AXuBCHuqTfBWDSbwZY9MkyyRyK4y_CRvloXUy3yXGLxZd5SlC4BQWH0W823qyOR3XrKhQ3TeuG0zjFtTZHnaQaEy6ma-FRGktm9THDNzkran7ejo2N5qlq6YW0GzGy9Shsmie2pYaM1iZbdXf4qoIsMLSuRzSh1Y6OvXNDgfHIefHFYide-iO8VwdzbBAHFXpmvy3aeh_18iU6uk135SSrlsCdzV8CvVFh9gCmi_6KP4e5nuieWvRsiBJj0xBf4yLoBcqahLYoWKiDmM')",
+                    `url(${Disease})`,
                 }}
               />
             </div>

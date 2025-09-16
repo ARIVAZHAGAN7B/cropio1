@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
+import corn from '../../assets/images/corn.jpg';
+import wheat from '../../assets/images/wheat.jpg';
+import rice from '../../assets/images/rice.jpg'
 const CropRecommended = ({ recommendations: propRecommendations }) => {
   const [activeSort, setActiveSort] = useState("Sort by Yield");
   const [recommendations, setRecommendations] = useState([]);
@@ -35,7 +37,7 @@ const CropRecommended = ({ recommendations: propRecommendations }) => {
             ],
             waterRequirement: variety.waterRequirement,
             marketDemand: variety.marketDemand,
-            img: `https://images.unsplash.com/photo-${crop.name.toLowerCase() === 'corn' ? '1551836022-d5d88e9218df' : crop.name.toLowerCase() === 'wheat' ? '1574323347407-f5e1ad6d020b' : '1536304993881-ff6e9eefa2a6'}?w=400`
+            img: `${crop.name.toLowerCase() === 'corn' ? corn : crop.name.toLowerCase() === 'wheat' ? wheat : rice }?w=400`
           }))
         );
         setRecommendations(defaultRecommendations.slice(0, 6));

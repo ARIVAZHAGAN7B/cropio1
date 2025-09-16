@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Sarah from "../../../assets/images/sarah_miller.jpeg";
+import David from "../../../assets/images/david_chen.jpeg"
 
 const allPosts = [
   {
@@ -6,7 +8,7 @@ const allPosts = [
     title: "Best Practices for Sustainable Wheat Farming",
     description:
       "I'm looking for advice on sustainable wheat farming techniques. What are some effective methods for reducing environmental impact while maintaining high yields?",
-    image: "https://lh3.googleusercontent.com/aida-public/...",
+    image: Sarah,
     crop: "wheat",
     location: "usa",
     language: "english",
@@ -17,7 +19,7 @@ const allPosts = [
     title: "Success Story: Implementing AI in My Farm",
     description:
       "I recently integrated AI-powered tools into my farm management, and the results have been incredible.",
-    image: "https://lh3.googleusercontent.com/aida-public/...",
+    image: David,
     crop: "general",
     location: "china",
     language: "chinese",

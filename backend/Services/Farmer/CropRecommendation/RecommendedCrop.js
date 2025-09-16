@@ -72,7 +72,7 @@ function generateRecommendations(farmData) {
             soilCompatibility: ["loamy", "clay"],
             waterRequirement: "moderate",
             marketDemand: "high",
-            img: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400"
+            img: "http://localhost:5000/images/corn.jpg"
         },
         {
             id: 2,
@@ -88,7 +88,7 @@ function generateRecommendations(farmData) {
             soilCompatibility: ["sandy", "loamy"],
             waterRequirement: "low",
             marketDemand: "high",
-            img: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400"
+            img: "http://localhost:5000/images/wheat.jpg"
         },
         {
             id: 3,
@@ -104,7 +104,7 @@ function generateRecommendations(farmData) {
             soilCompatibility: ["clay"],
             waterRequirement: "high",
             marketDemand: "high",
-            img: "https://images.unsplash.com/photo-1536304993881-ff6e9eefa2a6?w=400"
+            img: "http://localhost:5000/images/rice.jpg"
         }
     ];
 
