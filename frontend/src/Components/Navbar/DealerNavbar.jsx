@@ -114,8 +114,6 @@ const Drawer = styled(MuiDrawer, {
 
 const menuItems = [
   { label: "Dashboard", path: "/" },
-  { label: "Orders", path: "/orders" },
-  { label: "Products", path: "/products" },
   { label: "Customers", path: "/customers" },
   { label: "Farmer Connect", path: "/farmer-connect" },
   { label: "Price Forecast", path: "/price-forecast" },
@@ -123,7 +121,6 @@ const menuItems = [
   { label: "Logistics Integration", path: "/logistics-integration" },
   { label: "Inventory Manager", path: "/inventory-management" },
   { label: "Demand Supply Dashboard", path: "/demand-supply-dashboard" },
-  { label: "Settings", path: "/settings" },
 ];
 
 export default function MiniDrawer() {

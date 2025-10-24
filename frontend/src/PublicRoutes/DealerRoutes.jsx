@@ -6,11 +6,13 @@ import LogisticsIntegration from '../Panels/Dealer/LogisticsIntegration/Logistic
 import InverntoryManager from '../Panels/Dealer/InventoryManager/InventoryManager'
 import DemandSupplyDashboard from '../Panels/Dealer/DemandSupplyDashboard/DemandSupplyDashboard'
 import { Routes,Route } from 'react-router-dom'
+import Customers from '../Panels/Dealer/Customers/Customers'
 
 const DealerRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<DealerDashboard />} />
+      <Route path="/customers" element={<Customers />} />
       <Route path="/farmer-connect" element={<FarmerConnect />} />
       <Route path="/price-forecast" element={<PriceForecast />} />
       <Route path="/smart-purchase" element={<SmartPurchase />} />
