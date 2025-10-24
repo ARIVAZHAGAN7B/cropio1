@@ -1,31 +1,34 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
+
 const LoginForm = () => {
-  localStorage.setItem("loggedIn", false);
   const [user, setUser] = useState({
     emailOrusername: "",
     password: "",
-    rememberMe: "",
+    rememberMe: false,
   });
+
   const handleChange = (e) => {
-    setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, type, value, checked } = e.target;
+    setUser((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-  const handleClick = () => {
+  const handleLogin = () => {
+    // Example: you can verify credentials here
     localStorage.setItem("loggedIn", "true");
-    localStorage.setItem("user","Farmer");
+    localStorage.setItem("user", "Farmer");
+
+    // Notify all tabs/components
     window.dispatchEvent(new Event("loggedInChanged"));
-    window.dispatchEvent(new Event("handleUserChange"));
+    window.dispatchEvent(new Event("userChanged"));
   };
+
   return (
     <div
       className="relative flex min-h-screen flex-col bg-[#fafbf9] overflow-x-hidden"
       style={{
         fontFamily: "Lexend, 'Noto Sans', sans-serif",
-        "--checkbox-tick-svg":
-          "url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(19,24,17)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e')",
       }}
     >
       <div className="flex h-full grow flex-col">
@@ -37,9 +40,7 @@ const LoginForm = () => {
 
             <div className="flex flex-wrap items-end gap-4 px-4 py-3 max-w-[480px]">
               <label className="flex flex-col min-w-40 flex-1">
-                <p className="text-[#131811] text-base font-medium pb-2">
-                  Email
-                </p>
+                <p className="text-[#131811] text-base font-medium pb-2">Email</p>
                 <input
                   name="emailOrusername"
                   placeholder="Enter your email"
@@ -53,62 +54,52 @@ const LoginForm = () => {
 
             <div className="flex flex-wrap items-end gap-4 px-4 py-3 max-w-[480px]">
               <label className="flex flex-col min-w-40 flex-1">
-                <p className="text-[#131811] text-base font-medium pb-2">
-                  Password
-                </p>
-                <div className="flex items-stretch w-full rounded-xl">
-                  <input
-                    name="password"
-                    placeholder="Enter your password"
-                    className="form-input w-full flex-1 rounded-l-xl border border-[#d9e1d6] bg-[#fafbf9] p-[15px] text-base text-[#131811] placeholder-[#6d8560] focus:outline-none focus:ring-0 h-14"
-                    type="password"
-                    value={user.password}
-                    onChange={handleChange}
-                  />
-                  <div className="flex items-center justify-center pr-[15px] border border-[#d9e1d6] border-l-0 rounded-r-xl bg-[#fafbf9] text-[#6d8560]">
-                    <h4>eye</h4>
-                  </div>
-                </div>
+                <p className="text-[#131811] text-base font-medium pb-2">Password</p>
+                <input
+                  name="password"
+                  placeholder="Enter your password"
+                  className="form-input w-full rounded-xl border border-[#d9e1d6] bg-[#fafbf9] p-[15px] text-base text-[#131811] placeholder-[#6d8560] focus:outline-none focus:ring-0 h-14"
+                  type="password"
+                  value={user.password}
+                  onChange={handleChange}
+                />
               </label>
             </div>
 
             <div className="flex items-center justify-between px-4 min-h-14">
-              <p className="text-[#131811] text-base font-normal truncate">
-                Remember me
-              </p>
-
-              <input
-                name="rememberMe"
-                type="checkbox"
-                className="h-5 w-5 rounded border-[#d9e1d6] border-2 bg-transparent text-[#c5e0b7] checked:bg-[#c5e0b7] checked:border-[#c5e0b7] checked:bg-[image:var(--checkbox-tick-svg)] focus:ring-0 focus:outline-none cursor-pointer"
-                value={user.rememberMe}
-                onChange={handleChange}
-              />
+              <label className="flex items-center space-x-2">
+                <input
+                  name="rememberMe"
+                  type="checkbox"
+                  checked={user.rememberMe}
+                  onChange={handleChange}
+                />
+                <p className="text-[#131811] text-base font-normal">Remember me</p>
+              </label>
+              <Link to="/forgotpassword">
+                <p className="text-[#6d8560] text-sm underline">Forgot password?</p>
+              </Link>
             </div>
-            <Link to="/forgotpassword">
-              <p className="text-[#6d8560] text-sm px-4 underline pt-1 pb-3">
-                Forgot password?
-              </p>
-            </Link>
 
             <div className="px-4 py-3">
               <button
                 className="w-full h-12 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer font-bold"
-                onClick={handleClick}
+                onClick={handleLogin}
               >
                 Log in
               </button>
-              <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  console.log(credentialResponse);
-                }}
-                onError={() => {
-                  console.log("Login Failed");
-                }}
-                theme="outline"
-                size="large"
-                shape="pill"
-              />
+
+              <div className="mt-3">
+                <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                    console.log(credentialResponse);
+                  }}
+                  onError={() => console.log("Login Failed")}
+                  theme="outline"
+                  size="large"
+                  shape="pill"
+                />
+              </div>
             </div>
 
             <p className="text-[#6d8560] text-sm text-center px-4 underline pt-1 pb-3">

@@ -4,21 +4,32 @@ import DealerRoutes from "../PublicRoutes/DealerRoutes";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
 import DealerNavbar from "../Components/Navbar/DealerNavbar";
+import LoginForm from "../Pages/Login";
+
 const AppLayout = () => {
-  const [user, setUser] = useState("Farmer");
+  const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem("loggedIn") === "true");
+  const [user, setUser] = useState(() => localStorage.getItem("user") || "Farmer");
 
   useEffect(() => {
-    const handleUserChange = () => {
-      setUser(localStorage.getItem("user") || "");
+    const handleStorageChange = () => {
+      setLoggedIn(localStorage.getItem("loggedIn") === "true");
+      setUser(localStorage.getItem("user") || "Farmer");
     };
-    window.addEventListener("userChanged", handleUserChange);
-    window.addEventListener("storage", handleUserChange);
+
+    window.addEventListener("userChanged", handleStorageChange);
+    window.addEventListener("loggedInChanged", handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
 
     return () => {
-      window.removeEventListener("userChanged", handleUserChange);
-      window.removeEventListener("storage", handleUserChange);
+      window.removeEventListener("userChanged", handleStorageChange);
+      window.removeEventListener("loggedInChanged", handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
+
+  if (!loggedIn) {
+    return <LoginForm />;
+  }
 
   return (
     <>
@@ -26,12 +37,12 @@ const AppLayout = () => {
         {user === "Farmer" && <Navbar />}
         {user === "Dealer" && <DealerNavbar />}
       </div>
+
       <div>
-        <div className="ml-100px">
-          {user === "Farmer" && <FarmerRoutes />}
-          {user === "Dealer" && <DealerRoutes />}
-        </div>
+        {user === "Farmer" && <FarmerRoutes />}
+        {user === "Dealer" && <DealerRoutes />}
       </div>
+
       <Footer />
     </>
   );

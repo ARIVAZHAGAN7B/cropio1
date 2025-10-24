@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import RecommendationForm from "../../../Components/CropRecommendation/RecommendationForm";
 import CropRecommended from "../../../Components/CropRecommendation/CropRecommended";
 const CropRecommendation = () => {
+  const [recommendations, Setrecommendation] = useState();
   return (
     <div
       className="relative flex min-h-screen flex-col bg-[#fafbf9] overflow-x-hidden"
@@ -12,7 +13,7 @@ const CropRecommendation = () => {
       }}
     >
       <main className="px-40 py-5 flex justify-center">
-        <RecommendationForm/>
+        <RecommendationForm props={Setrecommendation}/>
         <CropRecommended />
       </main>
     </div>

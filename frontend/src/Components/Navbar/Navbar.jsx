@@ -1,4 +1,4 @@
-import React, { useState, useRef , useEffect} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
@@ -14,17 +14,27 @@ const Navbar = () => {
   const handleMouseLeave = () => {
     hideTimeoutRef.current = setTimeout(() => {
       setShowServices(false);
-    }, 75); // 100 millisecond delay
+    }, 75);
   };
 
-  const [user, Setuser] = useState("Farmer");
+  const [user, setUser] = useState(() => localStorage.getItem("user") || "Farmer");
 
-    const handleSelectUser = (role) => {
-    Setuser(role);
-    localStorage.setItem("user", role);
-    console.log("Selected:", role);
+  // 👇 Role switching function
+  const handleSwitchRole = () => {
+    const newRole = user === "Farmer" ? "Dealer" : "Farmer";
+    setUser(newRole);
+    localStorage.setItem("user", newRole);
     window.dispatchEvent(new Event("userChanged"));
+    console.log(`Switched to ${newRole}`);
   };
+
+  // Update if role changes externally (like from Dealer Navbar)
+  useEffect(() => {
+    const syncUser = () => setUser(localStorage.getItem("user") || "Farmer");
+    window.addEventListener("userChanged", syncUser);
+    return () => window.removeEventListener("userChanged", syncUser);
+  }, []);
+
   return (
     <header className="w-full px-6 py-4 border-b border-gray-200 bg-white flex items-center justify-between shadow-sm">
       {/* Logo */}
@@ -36,43 +46,27 @@ const Navbar = () => {
         />
         <h2 className="text-2xl font-bold text-green-700">Cropio</h2>
       </Link>
-          <div className="flex gap-3 p-4">
-    </div>
+
       {/* Navigation Links */}
       <div className="flex items-center space-x-6">
         <nav className="flex space-x-5 text-sm font-medium text-gray-700 relative">
-          <Link
-            to="/dashboard"
-            className="hover:text-green-600 transition-colors"
-          >
+          <Link to="/dashboard" className="hover:text-green-600 transition-colors">
             Dashboard
           </Link>
-          <Link
-            to="/croprecommendation"
-            className="hover:text-green-600 transition-colors"
-          >
+          <Link to="/croprecommendation" className="hover:text-green-600 transition-colors">
             Recommendations
           </Link>
-          <Link
-            to="/dieseasedetection"
-            className="hover:text-green-600 transition-colors"
-          >
+          <Link to="/dieseasedetection" className="hover:text-green-600 transition-colors">
             Disease Detection
           </Link>
-          <Link
-            to="/cultivationguide"
-            className="hover:text-green-600 transition-colors"
-          >
+          <Link to="/cultivationguide" className="hover:text-green-600 transition-colors">
             Cultivation Guides
           </Link>
-          <Link
-            to="/sustainable"
-            className="hover:text-green-600 transition-colors"
-          >
+          <Link to="/sustainable" className="hover:text-green-600 transition-colors">
             Sustainable Practices
           </Link>
 
-          {/* Services Dropdown Wrapper */}
+          {/* Services Dropdown */}
           <div
             className="relative"
             onMouseEnter={handleMouseEnter}
@@ -87,33 +81,21 @@ const Navbar = () => {
 
             {showServices && (
               <div className="absolute right-0 mt-2 bg-white border border-gray-200 shadow-lg rounded-md w-64 z-50 p-2 grid grid-cols-2 gap-1">
-                <Link
-                  to="/services/news"
-                  className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                >
+                <Link to="/services/news" className="block px-3 py-2 text-sm hover:bg-gray-100 rounded">
                   News
                 </Link>
-                <Link
-                  to="/services/community"
-                  className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                >
+                <Link to="/services/community" className="block px-3 py-2 text-sm hover:bg-gray-100 rounded">
                   Community
                 </Link>
-                <Link
-                  to="/services/market"
-                  className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                >
+                <Link to="/services/market" className="block px-3 py-2 text-sm hover:bg-gray-100 rounded">
                   Market
                 </Link>
-                <Link
-                  to="/services/subsidy"
-                  className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                >
+                <Link to="/services/subsidy" className="block px-3 py-2 text-sm hover:bg-gray-100 rounded">
                   Govt. Schemes
                 </Link>
                 <Link
                   to="/services/yield-estimation"
-                  className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded col-span-2 text-center"
+                  className="block px-3 py-2 text-sm hover:bg-gray-100 rounded col-span-2 text-center"
                 >
                   Yield Estimation
                 </Link>
@@ -122,10 +104,16 @@ const Navbar = () => {
           </div>
         </nav>
 
-        {/* Notification and Profile */}
-        <button className="text-xl hover:text-green-600 transition-colors">
-          🔔
+        {/* 🔁 Role Switcher Button */}
+        <button
+          onClick={handleSwitchRole}
+          className="bg-green-600 hover:bg-green-700"
+        >
+          Switch to {user === "Farmer" ? "Dealer" : "Farmer"}
         </button>
+
+        {/* Notification and Profile */}
+        <button className="text-xl hover:text-green-600 transition-colors">🔔</button>
         <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
       </div>
     </header>

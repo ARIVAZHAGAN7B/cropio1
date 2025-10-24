@@ -29,6 +29,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Link } from "react-router-dom";
 
+// Icons map
 export const menuIcons = {
   Dashboard: <DashboardIcon />,
   Orders: <ShoppingCartIcon />,
@@ -92,7 +93,6 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -111,7 +111,7 @@ const Drawer = styled(MuiDrawer, {
       }),
 }));
 
-
+// Menu items
 const menuItems = [
   { label: "Dashboard", path: "/" },
   { label: "Orders", path: "/orders" },
@@ -126,12 +126,34 @@ const menuItems = [
   { label: "Settings", path: "/settings" },
 ];
 
+// -----------------------------
+// ✅ Component Starts
+// -----------------------------
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
+  const [userRole, setUserRole] = React.useState(localStorage.getItem("user") || "Farmer");
+
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
+
+  // 🔄 Listen for user role change events from Navbar or other components
+  React.useEffect(() => {
+    const syncUser = () => {
+      const role = localStorage.getItem("user") || "Farmer";
+      setUserRole(role);
+    };
+    window.addEventListener("userChanged", syncUser);
+    return () => window.removeEventListener("userChanged", syncUser);
+  }, []);
+
+  // 🧠 Handle switching user role manually from drawer
+  const handleRoleChange = (role) => {
+    setUserRole(role);
+    localStorage.setItem("user", role);
+    window.dispatchEvent(new Event("userChanged")); // Notify Navbar or others
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -149,6 +171,7 @@ export default function MiniDrawer() {
           </IconButton>
         </Toolbar>
       </AppBar>
+
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
@@ -156,6 +179,8 @@ export default function MiniDrawer() {
           </IconButton>
         </DrawerHeader>
         <Divider />
+
+        {/* Menu Items */}
         <List>
           {menuItems.map((item) => (
             <ListItem key={item.label} disablePadding sx={{ display: "block" }}>
@@ -183,7 +208,44 @@ export default function MiniDrawer() {
             </ListItem>
           ))}
         </List>
+
+        {/* 🔘 Role display and switch */}
+        <Divider />
+        <Box sx={{ textAlign: "center", py: 2 }}>
+          <div style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "8px" }}>
+            Role: {userRole}
+          </div>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
+            <button
+              onClick={() => handleRoleChange("Farmer")}
+              style={{
+                backgroundColor: userRole === "Farmer" ? "#4CAF50" : "#E0E0E0",
+                color: userRole === "Farmer" ? "white" : "black",
+                border: "none",
+                borderRadius: "6px",
+                padding: "4px 8px",
+                cursor: "pointer",
+              }}
+            >
+              Farmer
+            </button>
+            <button
+              onClick={() => handleRoleChange("Buyer")}
+              style={{
+                backgroundColor: userRole === "Buyer" ? "#4CAF50" : "#E0E0E0",
+                color: userRole === "Buyer" ? "white" : "black",
+                border: "none",
+                borderRadius: "6px",
+                padding: "4px 8px",
+                cursor: "pointer",
+              }}
+            >
+              Buyer
+            </button>
+          </Box>
+        </Box>
       </Drawer>
+
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
       </Box>

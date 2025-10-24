@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const RecommendationForm = ({ onRecommendationsReceived }) => {
+const RecommendationForm = ({ Setrecommendation }) => {
   const [formData, setFormData] = useState({
     location: '',
     soilType: '',
@@ -33,7 +33,7 @@ const RecommendationForm = ({ onRecommendationsReceived }) => {
       const result = await response.json();
       
       if (result.success) {
-        onRecommendationsReceived(result.data.recommendations);
+        Setrecommendation(result.data.recommendations);
       } else {
         setError(result.message || 'Failed to get recommendations');
       }
@@ -74,9 +74,9 @@ const RecommendationForm = ({ onRecommendationsReceived }) => {
   ];
 
   const marketPreferenceOptions = [
-    { value: 'high_demand', label: 'High Market Demand' },
-    { value: 'stable_price', label: 'Stable Pricing' },
-    { value: 'export_potential', label: 'Export Potential' },
+    { value: 'high_demand', label: 'High Market Demand'},
+    { value: 'stable_price', label: 'Stable Pricing'},
+    { value: 'export_potential', label: 'Export Potential'},
     { value: 'local_market', label: 'Local Market Focus' }
   ];
 
