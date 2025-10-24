@@ -209,10 +209,6 @@ export default function MiniDrawer() {
         {/* 🔘 Role display and switch */}
         <Divider />
         <Box sx={{ textAlign: "center", py: 2 }}>
-          <div style={{ fontWeight: "bold", fontSize: "14px", marginBottom: "8px" }}>
-            Role: {userRole}
-          </div>
-          <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
             <button
               onClick={() => handleRoleChange("Farmer")}
               style={{
@@ -226,20 +222,6 @@ export default function MiniDrawer() {
             >
               Farmer
             </button>
-            <button
-              onClick={() => handleRoleChange("Buyer")}
-              style={{
-                backgroundColor: userRole === "Buyer" ? "#4CAF50" : "#E0E0E0",
-                color: userRole === "Buyer" ? "white" : "black",
-                border: "none",
-                borderRadius: "6px",
-                padding: "4px 8px",
-                cursor: "pointer",
-              }}
-            >
-              Buyer
-            </button>
-          </Box>
         </Box>
       </Drawer>
 

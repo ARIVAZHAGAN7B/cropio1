@@ -107,7 +107,6 @@ const Navbar = () => {
         {/* 🔁 Role Switcher Button */}
         <button
           onClick={handleSwitchRole}
-          className="bg-green-600 hover:bg-green-700"
         >
           Switch to {user === "Farmer" ? "Dealer" : "Farmer"}
         </button>

@@ -7,7 +7,7 @@ import DealerNavbar from "../Components/Navbar/DealerNavbar";
 import LoginForm from "../Pages/Login";
 
 const AppLayout = () => {
-  const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem("loggedIn") === "true");
+  const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem("loggedIn") === "false");
   const [user, setUser] = useState(() => localStorage.getItem("user") || "Farmer");
 
   useEffect(() => {
