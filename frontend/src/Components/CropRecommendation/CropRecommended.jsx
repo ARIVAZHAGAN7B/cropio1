@@ -1,141 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import corn from '../../assets/images/corn.jpg';
-import wheat from '../../assets/images/wheat.jpg';
-import rice from '../../assets/images/rice.jpg'
-const CropRecommended = ({ recommendations: propRecommendations }) => {
-  const [activeSort, setActiveSort] = useState("Sort by Yield");
-  const [recommendations, setRecommendations] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const baseUrl = import.meta.env.VITE_FARMER_API_URL || 'http://localhost:5000/api/farmer';
-  useEffect(() => {
-    if (propRecommendations) {
-      setRecommendations(propRecommendations);
-    } else {
-      fetchDefaultRecommendations();
+import React from 'react';
+
+const CropRecommended = ({ recommendations }) => {
+    let cropName = null;
+
+    // Check 1: If the prop is the object { recommendation: "Rice" }
+    if (recommendations && typeof recommendations === 'object' && recommendations.recommendation) {
+        cropName = recommendations.recommendation;
+    } 
+    // Check 2: If the Parent Component passed the raw string directly
+    else if (typeof recommendations === 'string') {
+        cropName = recommendations;
     }
-  }, [propRecommendations]);
-
-  const fetchDefaultRecommendations = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${baseUrl}/croprecommendation/recommendedcrops`);
-      const result = await response.json();
-      
-      if (result.success) {
-        // Transform crop data to recommendations format
-        const defaultRecommendations = result.data.flatMap(crop =>
-          crop.varieties.map(variety => ({
-            title: `${crop.name} - ${variety.name}`,
-            variety: variety.name,
-            expectedYield: variety.expectedYield,
-            yieldUnit: "bushels/acre",
-            reasons: [
-              `Expected yield: ${variety.expectedYield} bushels/acre`,
-              `Water requirement: ${variety.waterRequirement}`,
-              `Growth period: ${variety.growthPeriod}`,
-              `Market demand: ${variety.marketDemand}`
-            ],
-            waterRequirement: variety.waterRequirement,
-            marketDemand: variety.marketDemand,
-            img: `${crop.name.toLowerCase() === 'corn' ? corn : crop.name.toLowerCase() === 'wheat' ? wheat : rice }?w=400`
-          }))
-        );
-        setRecommendations(defaultRecommendations.slice(0, 6));
-      }
-    } catch (error) {
-      console.error('Failed to fetch default recommendations:', error);
-    } finally {
-      setLoading(false);
+    // Check 3: If the Parent Component passed { data: "Rice" }
+    else if (recommendations && typeof recommendations === 'object' && recommendations.data) {
+        // This is a common error: passing result.data when it should be result.data.recommendation
+        cropName = recommendations.data;
     }
-  };
 
-  const sortRecommendations = (sortType) => {
-    const sorted = [...recommendations].sort((a, b) => {
-      if (sortType === "Sort by Yield") {
-        return b.expectedYield - a.expectedYield;
-      } else if (sortType === "Sort by Water Needs") {
-        const waterOrder = { low: 1, moderate: 2, high: 3 };
-        return waterOrder[a.waterRequirement] - waterOrder[b.waterRequirement];
-      }
-      return 0;
-    });
-    setRecommendations(sorted);
-  };
 
-  const handleSortChange = (sortType) => {
-    setActiveSort(sortType);
-    sortRecommendations(sortType);
-  };
-
-  if (loading) {
-    return (
-      <div className="p-8 text-center">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-        <p className="mt-2 text-gray-600">Loading recommendations...</p>
-      </div>
-    );
-  }
-
-  return (
-    <div>
-      <div className="px-4 pt-5 pb-3">
-        <h2 className="text-[22px] font-bold text-[#131811]">Recommended Crops</h2>
-        {recommendations.length > 0 && (
-          <p className="text-sm text-[#6d8560] mt-1">
-            Showing {recommendations.length} personalized recommendations
-          </p>
-        )}
-      </div>
-
-      {recommendations.length > 0 && (
-        <div className="flex gap-3 p-3 flex-wrap pr-4">
-          {["Sort by Yield", "Sort by Water Needs"].map((label) => (
-            <button
-              key={label}
-              onClick={() => handleSortChange(label)}
-              className={`px-4 py-2 rounded cursor-pointer text-white transition-colors ${
-                activeSort === label ? "bg-green-700" : "bg-green-600 hover:bg-green-700"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {recommendations.length === 0 ? (
-        <div className="p-8 text-center text-gray-600">
-          <p>No recommendations available. Please fill out the recommendation form to get personalized suggestions.</p>
-        </div>
-      ) : (
-        recommendations.map((crop, index) => (
-          <div key={`${crop.title}-${index}`} className="p-4">
-            <div className="flex gap-4 rounded-xl bg-[#fafbf9] p-4 shadow hover:shadow-lg transition-shadow">
-              <div className="flex flex-col gap-2 flex-[2]">
-                <p className="text-base font-bold text-[#131811]">{crop.title}</p>
-                <div className="text-sm text-[#6d8560]">
-                  <p className="font-medium">Variety: {crop.variety}</p>
-                  <p>Expected Yield: {crop.expectedYield} {crop.yieldUnit}</p>
-                  <div className="mt-2">
-                    <p className="font-medium">Key Benefits:</p>
-                    <ul className="list-disc list-inside mt-1">
-                      {crop.reasons.map((reason, idx) => (
-                        <li key={idx}>{reason}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="aspect-video bg-cover bg-center rounded-xl flex-1 min-h-[120px]"
-                style={{ backgroundImage: `url('${crop.img}')` }}
-              ></div>
+    // Handle the case where no recommendation is available or loading
+    if (!cropName) {
+        return (
+            <div className="p-8 text-center text-gray-600">
+                <p>No personalized crop recommendation available yet. Please submit the form.</p>
             </div>
-          </div>
-        ))
-      )}
-    </div>
-  );
+        );
+    }
+    
+    // ... rest of the stylish rendering code (which you already have)
+    return (
+        <div className="px-4 pt-5 pb-3">
+            <h2 className="text-[22px] font-bold text-[#131811] mb-4">
+                Your Predicted Crop
+            </h2>
+            
+            <div className="p-4">
+                <div className="rounded-xl bg-[#fafbf9] p-6 shadow hover:shadow-lg transition-shadow">
+                    
+                    <div className="flex flex-col gap-2 text-center">
+                        <p className="text-2xl md:text-3xl font-extrabold text-green-800 uppercase tracking-wider">
+                            {cropName}  {/* THIS IS THE LINE THAT SHOULD NOW WORK */}
+                        </p>
+                        
+                        <div className="text-sm text-[#6d8560] mt-3 border-t pt-3 border-gray-200">
+                            <p className="font-medium">
+                                This recommendation is based on the NPK, climate, and rainfall data you provided.
+                            </p>
+                            <p className="mt-1">
+                                For detailed variety information and yield projections, consult your local agricultural extension service.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default CropRecommended;

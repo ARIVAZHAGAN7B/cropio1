@@ -1,13 +1,9 @@
 import HomeDashboard from "../Components/Home/HomeDashboard";
-import {Link} from "react-router-dom";
-import Corn from "../assets/images/corn.jpg";
-import Wheat from "../assets/images/wheat.jpg";
-import Soya from "../assets/images/soyabean.jpg";
-import Disease from "../assets/images/disease-detection.png";
-
+import { Link } from "react-router-dom";
+import { corn, wheat, soyabean, disease } from "../assets/images/Images"
 const FarmerDashboard = () => {
-        return (
-      <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
+  return (
+    <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800">
       {/* Header */}
 
       {/* Main Content */}
@@ -29,17 +25,17 @@ const FarmerDashboard = () => {
                 {
                   title: "Wheat Varieties for Your Region",
                   text: "Discover the best wheat varieties suited for your farm's soil and climate.",
-                  img: Wheat,
+                  img: wheat,
                 },
                 {
                   title: "Optimized Corn Cultivation",
                   text: "Maximize your corn yield with our expert cultivation techniques.",
-                  img: Corn,
+                  img: corn,
                 },
                 {
                   title: "Soybean Planting Strategies",
                   text: "Learn effective strategies for planting and nurturing soybeans.",
-                  img: Soya,
+                  img: soyabean,
                 },
               ].map((item, index) => (
                 <div key={index} className="bg-white rounded-lg shadow">
@@ -77,7 +73,7 @@ const FarmerDashboard = () => {
                 className="md:w-1/2 h-56 md:h-auto bg-cover bg-center"
                 style={{
                   backgroundImage:
-                    `url(${Disease})`,
+                    `url(${disease})`,
                 }}
               />
             </div>
@@ -134,7 +130,7 @@ const FarmerDashboard = () => {
         </main>
       </div>
     </div>
-    );
+  );
 }
 
 export default FarmerDashboard

@@ -1,0 +1,40 @@
+2025-09-17 12:07:40,801 - INFO - Dataset loaded successfully with 2200 rows
+2025-09-17 12:07:40,825 - INFO - Outliers removed. Rows before: 2200, after: 1768
+2025-09-17 12:07:40,835 - INFO - Data split into train (1414) and test (354)
+2025-09-17 12:07:40,908 - INFO - Training Accuracy: 99.01%
+2025-09-17 12:07:40,909 - INFO - Validation Accuracy: 99.15%
+2025-09-17 12:16:10,062 - INFO - Dataset loaded successfully with 2200 rows
+2025-09-17 12:16:10,085 - INFO - Outliers removed. Rows before: 2200, after: 1768
+2025-09-17 12:16:10,096 - INFO - Data split into train (1414) and test (354)
+2025-09-17 12:16:10,179 - INFO - Training Accuracy: 99.01%
+2025-09-17 12:16:10,180 - INFO - Validation Accuracy: 99.15%
+2025-09-17 13:40:21,760 - INFO - Classification Report:
+              precision    recall  f1-score   support
+
+      banana       1.00      1.00      1.00        16
+   blackgram       1.00      1.00      1.00        23
+    chickpea       1.00      1.00      1.00        11
+     coconut       1.00      1.00      1.00        16
+      coffee       1.00      1.00      1.00        17
+      cotton       1.00      1.00      1.00        20
+        jute       0.94      0.89      0.91        18
+ kidneybeans       1.00      1.00      1.00        23
+      lentil       1.00      1.00      1.00        21
+       maize       1.00      1.00      1.00        20
+       mango       1.00      1.00      1.00        20
+   mothbeans       1.00      1.00      1.00        10
+    mungbean       1.00      1.00      1.00        27
+   muskmelon       1.00      1.00      1.00        19
+      orange       1.00      1.00      1.00        19
+      papaya       1.00      1.00      1.00        11
+  pigeonpeas       1.00      1.00      1.00        16
+ pomegranate       1.00      1.00      1.00        15
+        rice       0.80      0.89      0.84         9
+  watermelon       1.00      1.00      1.00        23
+
+    accuracy                           0.99       354
+   macro avg       0.99      0.99      0.99       354
+weighted avg       0.99      0.99      0.99       354
+
+2025-09-17 13:40:21,765 - INFO - Model saved as model.pkl
+2025-09-17 13:40:21,765 - INFO - Pipeline execution completed successfully

@@ -9,17 +9,6 @@ export default function LogisticsIntegration() {
       <div className="layout-container flex h-full grow flex-col">
         <div className="gap-1 px-6 flex-1 flex justify-center py-5">
           {/* Left Sidebar (Removed Navbar per request, keeping only header part) */}
-          <div className="layout-content-container flex flex-col w-80">
-            <div className="flex h-full min-h-[700px] flex-col justify-between bg-[#fafbf9] p-4">
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col">
-                  <h1 className="text-[#131811] text-base font-medium leading-normal">AgriLink</h1>
-                  <p className="text-[#6d8560] text-sm font-normal leading-normal">Farmer Portal</p>
-                </div>
-                {/* Navigation menu removed */}
-              </div>
-            </div>
-          </div>
 
           {/* Main Content */}
           <div className="layout-content-container flex flex-col max-w-[960px] flex-1">

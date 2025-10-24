@@ -1,84 +1,101 @@
 import React, { useState } from 'react';
 
-const RecommendationForm = ({ Setrecommendation }) => {
+// --- Note: Removed all categorical options arrays (Nitrogen, Phosporus, etc.)
+// --- as your model expects N, P, K, Temperature, Humidity, Ph, Rainfall as numbers.
+
+const RecommendationForm = ({ onRecommendationsReceived }) => {
+  // State is now correctly set up for numerical input (as strings initially)
   const [formData, setFormData] = useState({
-    location: '',
-    soilType: '',
-    previousCrops: '',
-    waterAvailability: '',
-    fertilizerAccess: '',
-    marketDemandPreferences: '',
-  });
-  const baseUrl = import.meta.env.VITE_FARMER_API_URL || 'http://localhost:5000/api/farmer';
+        nitrogen: 10,
+        phosphorus: 10,
+        potassium: 10,
+        temperature: 50,
+        humidity: 90,
+        ph: 2.5,
+        rainfall: 500
+    });
+  
+  // Base URL pointing to your FastAPI endpoint running on port 6000
+  const baseUrl = 'http://localhost:8000'; 
+  const apiPath = '/api/farmer/croprecommendation/cropdata'; // Matches the FastAPI endpoint path
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleChange = (field) => (e) => {
+    // Allows for number input (stored as string in state)
     setFormData({ ...formData, [field]: e.target.value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevents default form submission if wrapped in a <form>
     setLoading(true);
     setError('');
-    
+
+    // --- Data Validation and Conversion ---
+    const dataToSend = {};
+    let incomplete = false;
+
+    // Convert all fields to float and check for empty/invalid input
+    for (const key in formData) {
+      const value = formData[key];
+      if (value === '' || value === null) {
+        incomplete = true;
+        break;
+      }
+      // Parse the string value to a float, which the FastAPI Pydantic model expects
+      dataToSend[key] = parseFloat(value); 
+    }
+
+    if (incomplete) {
+      setError('Please fill in all numerical fields.');
+      setLoading(false);
+      return;
+    }
+    // --- End Validation ---
+
     try {
-      const response = await fetch(`${baseUrl}/croprecommendation/cropdata`, {
+      // NOTE: The URL MUST match the FastAPI route exactly
+      const response = await fetch(`${baseUrl}${apiPath}`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend), // Sending the cleaned, numerical data
       });
       
       const result = await response.json();
       
-      if (result.success) {
-        Setrecommendation(result.data.recommendations);
+      if (response.ok && result.success) { 
+        console.log('API Response:', result);
+        // Call the parent function to display the recommendation
+        console.log("Recommendations:", result.data.recommendation);
+        onRecommendationsReceived(result.data.recommendation);
+        
       } else {
-        setError(result.message || 'Failed to get recommendations');
+        // Use the error message returned from the FastAPI server if available
+        const errorMessage = result.message || `Failed to get recommendations. Status: ${response.status}`;
+        setError(errorMessage);
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      // Catch network errors (CORS, server down, etc.)
+      setError('Network error: Could not connect to the API server. Ensure it is running on port 6000.');
       console.error('API Error:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const soilTypeOptions = [
-    { value: 'sandy', label: 'Sandy Soil' },
-    { value: 'clay', label: 'Clay Soil' },
-    { value: 'loamy', label: 'Loamy Soil' },
-    { value: 'silt', label: 'Silt Soil' }
-  ];
-
-  const waterAvailabilityOptions = [
-    { value: 'low', label: 'Low Water Availability' },
-    { value: 'moderate', label: 'Moderate Water Availability' },
-    { value: 'high', label: 'High Water Availability' }
-  ];
-
-  const previousCropsOptions = [
-    { value: 'corn', label: 'Corn' },
-    { value: 'wheat', label: 'Wheat' },
-    { value: 'rice', label: 'Rice' },
-    { value: 'soybeans', label: 'Soybeans' },
-    { value: 'none', label: 'No Previous Crops' }
-  ];
-
-  const fertilizerOptions = [
-    { value: 'organic', label: 'Organic Fertilizer' },
-    { value: 'synthetic', label: 'Synthetic Fertilizer' },
-    { value: 'both', label: 'Both Available' },
-    { value: 'limited', label: 'Limited Access' }
-  ];
-
-  const marketPreferenceOptions = [
-    { value: 'high_demand', label: 'High Market Demand'},
-    { value: 'stable_price', label: 'Stable Pricing'},
-    { value: 'export_potential', label: 'Export Potential'},
-    { value: 'local_market', label: 'Local Market Focus' }
-  ];
+  // Define the fields to render
+  const numericalFields = [
+        { key: 'nitrogen', label: 'Nitrogen (N)', units: 'kg/ha' },
+        { key: 'phosphorus', label: 'Phosphorus (P)', units: 'kg/ha' },
+        { key: 'potassium', label: 'Potassium (K)', units: 'kg/ha' },
+        { key: 'temperature', label: 'Temperature', units: '°C' },
+        { key: 'humidity', label: 'Humidity', units: '%' },
+        { key: 'ph', label: 'Soil pH', units: '' },
+        { key: 'rainfall', label: 'Rainfall', units: 'mm' },
+    ];
 
   return (
     <div>
@@ -93,57 +110,43 @@ const RecommendationForm = ({ Setrecommendation }) => {
           )}
         </div>
 
-        <div className="px-4 py-3 max-w-[480px]">
-          <label className="flex flex-col">
-            <span className="text-base font-medium text-[#131811] pb-2">Location</span>
-            <input
-              value={formData.location}
-              onChange={handleChange('location')}
-              placeholder="Enter your farm's location"
-              className="h-14 p-4 rounded-xl bg-[#ecf0ea] text-base text-[#131811] focus:outline-none"
-            />
-          </label>
-        </div>
+        {/* Use <form> tag to allow for proper submission handling */}
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+          
+          {numericalFields.map(({ label, key, min, max, step, units }) => (
+            <div key={key} className="py-2">
+                <label className="flex flex-col">
+                <span className="text-base font-medium text-[#131811] pb-2">{label}</span>
+                <input
+                    type="number"
+                    name={key}
+                    value={formData[key]}
+                    onChange={handleChange(key)}
+                    className="h-14 p-4 rounded-xl bg-[#ecf0ea] text-base text-[#131811] focus:outline-none"
+                    placeholder={`Enter value for ${label}${units ? ` (${units})` : ''}`}
+                    min={min}
+                    max={max}
+                    step={step}
+                    required
+                />
+                </label>
+            </div>
+          ))}
 
-        {[
-          { label: "Soil Type", field: "soilType", options: soilTypeOptions },
-          { label: "Previous Crops", field: "previousCrops", options: previousCropsOptions },
-          { label: "Water Availability", field: "waterAvailability", options: waterAvailabilityOptions },
-          { label: "Fertilizer Access", field: "fertilizerAccess", options: fertilizerOptions },
-          { label: "Market Demand Preferences", field: "marketDemandPreferences", options: marketPreferenceOptions },
-        ].map(({ label, field, options }) => (
-          <div key={label} className="px-4 py-3 max-w-[480px]">
-            <label className="flex flex-col">
-              <span className="text-base font-medium text-[#131811] pb-2">{label}</span>
-              <select
-                value={formData[field]}
-                onChange={handleChange(field)}
-                className="h-14 p-4 rounded-xl bg-[#ecf0ea] text-base text-[#131811] focus:outline-none"
-              >
-                <option value="">Select {label.toLowerCase()}</option>
-                {options.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+          <div className="md:col-span-2 flex justify-end px-4 py-3">
+            <button
+              type="submit" // Set type to submit for form handling
+              className={`px-6 py-3 rounded text-white font-medium ${
+                loading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-green-600 hover:bg-green-700 cursor-pointer'
+              }`}
+              disabled={loading}
+            >
+              {loading ? 'Getting Recommendations...' : 'Get Recommendations'}
+            </button>
           </div>
-        ))}
-
-        <div className="px-4 py-3 flex justify-end">
-          <button
-            className={`px-6 py-3 rounded text-white font-medium ${
-              loading 
-                ? 'bg-gray-400 cursor-not-allowed' 
-                : 'bg-green-600 hover:bg-green-700 cursor-pointer'
-            }`}
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? 'Getting Recommendations...' : 'Get Recommendations'}
-          </button>
-        </div>
+        </form>
       </div>
     </div>
   );
