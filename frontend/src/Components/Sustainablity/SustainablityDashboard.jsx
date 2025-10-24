@@ -67,12 +67,14 @@ const SustainabilityDashboard = () => {
     <div className="p-4">
       <div className="flex flex-col @xl:flex-row rounded-xl bg-[#f9fcf8] shadow-[0_0_4px_rgba(0,0,0,0.1)]">
         <div
-          className="w-full @xl:w-1/2 aspect-video bg-cover bg-center rounded-xl"
-          style={{
-            backgroundImage:
-              "url('https://lh3.googleusercontent.com/aida-public/AB6AXuC8ZPzz11_P_aPMxRyhqPPOB-4p3HmALUCrrEHdMJ64SBNv06yOieOMq2kveJqMA3hasW61cH2lbep3Xo-x4m-nAVuCIo4dwjC6Jjx2Adde03yTfh8zDrW3DZl68Fr8vIcROFXqMa-CIQttAucZOx2BGnA7JsawFrTAcBDNo0C3NSvFBlQ8608xHBKDh4rtddxOf30vvJOY5TeerLezDzZYV_RGbHuv_5Mkjq8sFLk35nzopf3Ngzo1aYoPCgFHYSs9OmjkTKMrO_Y')",
-          }}
-        ></div>
+  className="w-full @xl:w-1/2 aspect-[16/6] bg-cover bg-center rounded-xl"
+  style={{
+    backgroundImage:
+      "url('https://www.icl-group.com/wp-content/uploads/2021/03/iStock-1022892932-1.jpg')",
+  }}
+></div>
+
+
         <div className="flex flex-col gap-4 py-4 px-4 @xl:w-1/2">
           <div className="flex items-center gap-3">
             <p className="text-lg font-bold">Sustainability Score</p>
