@@ -79,6 +79,6 @@ router.get("/sustainableagriculture/sustainablepractices",SustainablePractices);
 
 //Yield Estimation
 router.post("/yieldestimation/cropyieldinput",CropYieldInput);
-router.get("/yieldestimation/estimatedyield",EstimatedYield);
+router.post("/yieldestimation/estimatedyield",EstimatedYield);
 
 module.exports = router;

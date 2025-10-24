@@ -6,7 +6,26 @@ const DiseaseInput = ({ onDetectionResult }) => {
   const [symptoms, setSymptoms] = useState('');
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
-  const baseUrl = import.meta.env.VITE_FARMER_API_URL;
+
+  const cropDiseases = {
+    corn: [
+      { name: 'Corn Rust', treatment: 'Use resistant varieties and fungicides' },
+      { name: 'Northern Leaf Blight', treatment: 'Remove infected leaves and crop rotation' },
+    ],
+    wheat: [
+      { name: 'Powdery Mildew', treatment: 'Apply sulfur-based fungicides' },
+      { name: 'Leaf Rust', treatment: 'Use resistant wheat varieties' },
+    ],
+    rice: [
+      { name: 'Bacterial Leaf Blight', treatment: 'Use disease-free seeds and proper spacing' },
+      { name: 'Rice Blast', treatment: 'Apply fungicides and remove infected debris' },
+    ],
+    tomato: [
+      { name: 'Late Blight', treatment: 'Remove affected leaves, fungicides, proper drainage' },
+      { name: 'Tomato Mosaic Virus', treatment: 'Use resistant varieties, clean tools' },
+    ],
+  };
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -16,41 +35,29 @@ const DiseaseInput = ({ onDetectionResult }) => {
     }
   };
 
-  const handleDetection = async () => {
-    if (!imageFile && !symptoms) {
-      alert('Please upload an image or describe symptoms');
+  const handleDetection = () => {
+    if (!cropType) {
+      alert('Please select a crop type');
       return;
     }
 
     setLoading(true);
 
-    try {
-      // In a real implementation, you'd convert the image to base64 or use FormData
-      const formData = new FormData();
-      if (imageFile) formData.append('image', imageFile);
-      formData.append('cropType', cropType);
-      formData.append('symptoms', symptoms);
+    // Simulate API detection with random disease
+    const diseases = cropDiseases[cropType];
+    const randomDisease = diseases[Math.floor(Math.random() * diseases.length)];
 
-      const response = await fetch(`${baseUrl}/disease/input`, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cropType, symptoms })
-      });
+    const resultData = {
+      crop: cropType,
+      disease: randomDisease.name,
+      treatment: randomDisease.treatment,
+      confidence: `${Math.floor(Math.random() * 21) + 80}%`, // 80-100% confidence
+    };
 
-      const result = await response.json();
-
-      if (result.success) {
-        onDetectionResult(result.data);
-        console.log("We won");
-      } else {
-        alert('Detection failed: ' + result.message);
-      }
-    } catch (error) {
-      console.error('Detection error:', error);
-      alert('Detection failed. Please try again.');
-    } finally {
+    setTimeout(() => {
+      onDetectionResult(resultData);
       setLoading(false);
-    }
+    }, 1000); // Simulate 1s API call
   };
 
   return (
@@ -106,8 +113,8 @@ const DiseaseInput = ({ onDetectionResult }) => {
           onClick={handleDetection}
           disabled={loading}
           className={`w-full py-3 rounded-lg text-white font-medium ${loading
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-green-600 hover:bg-green-700'
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-green-600 hover:bg-green-700'
             }`}
         >
           {loading ? 'Analyzing...' : 'Detect Disease'}

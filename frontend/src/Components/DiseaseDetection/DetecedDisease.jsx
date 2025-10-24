@@ -1,13 +1,24 @@
-import React from 'react'
+import React from 'react';
 
-const DetecedDisease = () => {
+const DetecedDisease = ({ detectionResult }) => {
+  if (!detectionResult) {
+    return (
+      <div className="mt-6 p-6 bg-white rounded-xl shadow-lg">
+        <h2 className="text-[22px] font-bold mb-3">Detection Results</h2>
+        <p className="text-base">Results will be displayed here after processing the image.</p>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h2 className="text-[22px] font-bold px-4 pt-5 pb-3">Detection Results</h2>
-      <p className="text-base px-4 pb-3">Results will be displayed here after processing the image. 
-        This includes the detected issue, confidence score, annotated image, and treatment options.</p>
+    <div className="mt-6 p-6 bg-white rounded-xl shadow-lg">
+      <h2 className="text-[22px] font-bold mb-3">Detection Results</h2>
+      <p><strong>Crop:</strong> {detectionResult.crop}</p>
+      <p><strong>Disease:</strong> {detectionResult.disease}</p>
+      <p><strong>Confidence:</strong> {detectionResult.confidence}</p>
+      <p><strong>Treatment:</strong> {detectionResult.treatment}</p>
     </div>
-  )
-}
+  );
+};
 
-export default DetecedDisease
+export default DetecedDisease;
