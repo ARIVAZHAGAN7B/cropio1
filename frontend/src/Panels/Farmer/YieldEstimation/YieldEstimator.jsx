@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const baseUrl = import.meta.env.VITE_FARMER_API_URL;
 
@@ -29,11 +29,14 @@ export default function YieldEstimator() {
   const handlePredict = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/farmer/yieldestimation/estimatedyield', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "http://localhost:5000/api/farmer/yieldestimation/estimatedyield",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Failed to fetch yield estimation");
@@ -53,12 +56,27 @@ export default function YieldEstimator() {
   const inputClass =
     "form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#121b0e] focus:outline-0 focus:ring-0 border border-[#d7e7d0] bg-[#f9fcf8] focus:border-[#d7e7d0] h-14 placeholder:text-[#67974e] p-[15px] text-base font-normal leading-normal";
 
+  const options = {
+    soilType: ["Sandy", "Loamy", "Clay", "Silt", "Peaty", "Chalky"],
+    waterAvailability: ["Low", "Medium", "High"],
+    irrigationMethod: ["Drip", "Sprinkler", "Flood", "Manual"],
+    fertilizerUse: ["None", "Organic", "Chemical", "Mixed"],
+    pesticideUse: ["None", "Low", "Medium", "High"],
+    sowingMonth: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
+    harvestMonth: [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ],
+    farmingMethod: ["Conventional", "Organic", "Hydroponic", "Permaculture"]
+  };
+
   return (
     <div
       className="relative flex min-h-screen flex-col bg-[#f9fcf8] group/design-root overflow-x-hidden"
-      style={{
-        fontFamily: 'Lexend, "Noto Sans", sans-serif',
-      }}
+      style={{ fontFamily: 'Lexend, "Noto Sans", sans-serif' }}
     >
       <div className="layout-container flex h-full grow flex-col">
         <main className="px-40 flex flex-1 justify-center py-5">
@@ -83,6 +101,9 @@ export default function YieldEstimator() {
                   <option value="wheat">Wheat</option>
                   <option value="rice">Rice</option>
                   <option value="corn">Corn</option>
+                  <option value="soybean">Soybean</option>
+                  <option value="barley">Barley</option>
+                  <option value="cotton">Cotton</option>
                 </select>
               </label>
             </div>
@@ -125,8 +146,11 @@ export default function YieldEstimator() {
                     aria-label={key}
                   >
                     <option value="">{key.replace(/([A-Z])/g, " $1")}</option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
+                    {options[key].map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
                   </select>
                 </label>
               </div>
@@ -159,8 +183,7 @@ export default function YieldEstimator() {
                         {yieldData.title || "Predicted Yield"}
                       </p>
                       <p className="text-white text-base font-medium leading-normal">
-                        {yieldData.description ||
-                          "Your estimated yield will appear here."}
+                        {yieldData.description || "Your estimated yield will appear here."}
                       </p>
                     </div>
                   </div>
