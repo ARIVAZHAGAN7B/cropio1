@@ -4,16 +4,16 @@ const baseUrl = import.meta.env.VITE_FARMER_API_URL;
 
 export default function YieldEstimator() {
   const [formData, setFormData] = useState({
-    crop: "",
-    landArea: "",
-    soilType: "",
-    waterAvailability: "",
-    irrigationMethod: "",
-    fertilizerUse: "",
-    pesticideUse: "",
-    sowingMonth: "",
-    harvestMonth: "",
-    farmingMethod: "",
+    crop: "wheat",
+    landArea: "2",
+    soilType: "Sandy",
+    waterAvailability: "Low",
+    irrigationMethod: "Drip",
+    fertilizerUse: "Organic",
+    pesticideUse: "Low",
+    sowingMonth: "March",
+    harvestMonth: "September",
+    farmingMethod: "Organic",
   });
 
   const [yieldData, setYieldData] = useState(null);
